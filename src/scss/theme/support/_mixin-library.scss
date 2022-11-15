@@ -1,0 +1,300 @@
+// =============================================================================
+// Absolute center
+// =============================================================================
+@mixin absolute_center ($margin, $width, $height)
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    display: block;
+
+    width: $width * 1px;
+    height: $height * 1px;
+    margin: $margin;
+}
+
+// =============================================================================
+// Background to place a svg as a data:image on xml
+//
+// =============================================================================
+
+@mixin backgroundSVG($svgCode)
+{
+    background-image: url(data:image/svg+xml,#{$svgCode});
+}
+
+// =============================================================================
+// z-index manager
+//
+// source - https://www.sitepoint.com/better-solution-managing-z-index-sass/
+// =============================================================================
+
+$z-layers: (
+  'overlay': 2000,
+  'navbar' : 1060,
+  'default': 1,
+  'underground': -2000
+)!default;
+
+@function z($layer)
+{
+    @if not map-has-key($z-layers, $layer)
+    {
+        @warn 'No z-index found in $z-layers map for `#{$layer}`. Property omitted.';
+    }
+
+    @return map-get($z-layers, $layer);
+}
+
+// =====================================================================
+//
+// SVG ENCODER FOR SASS
+//
+// USAGE:
+//
+// .class {
+//    background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg">.....</svg>');
+// }
+//
+// or
+//
+// .class {
+//    @include background-svg('<svg xmlns="http://www.w3.org/2000/svg">.....</svg>');
+// }
+//
+// =====================================================================
+
+@function encode-svg($svg)
+{
+    //
+    //  Chunk up string in order to avoid
+    //  "stack level too deep" error
+    //
+    $encoded: '';
+    $slice: 2000;
+    $index: 0;
+    $loops: ceil(str-length($svg)/$slice);
+    //
+    //  Add missing namespace
+    //
+    @if not str-index($svg,xmlns)
+    {
+        $svg: str-replace($svg, '<svg','<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+    @for $i from 1 through $loops
+    {
+        $chunk: str-slice($svg, $index, $index + $slice - 1);
+        //
+        //   Encode
+        //
+        $chunk: str-replace($chunk, '"', '\'');
+        $chunk: str-replace($chunk, '%', '%25');
+        $chunk: str-replace($chunk, '#', '%23');
+        $chunk: str-replace($chunk, '{', '%7B');
+        $chunk: str-replace($chunk, '}', '%7D');
+        $chunk: str-replace($chunk, '<', '%3C');
+        $chunk: str-replace($chunk, '>', '%3E');
+        //
+        //    The maybe list
+        //
+        //    Keep size and compile time down
+        //    ... only add on documented fail
+        //
+        //  $chunk: str-replace($chunk, '&', '%26');
+        //  $chunk: str-replace($chunk, '|', '%7C');
+        //  $chunk: str-replace($chunk, '[', '%5B');
+        //  $chunk: str-replace($chunk, ']', '%5D');
+        //  $chunk: str-replace($chunk, '^', '%5E');
+        //  $chunk: str-replace($chunk, '`', '%60');
+        //  $chunk: str-replace($chunk, ';', '%3B');
+        //  $chunk: str-replace($chunk, '?', '%3F');
+        //  $chunk: str-replace($chunk, ':', '%3A');
+        //  $chunk: str-replace($chunk, '@', '%40');
+        //  $chunk: str-replace($chunk, '=', '%3D');
+        $encoded: #{$encoded}#{$chunk};
+        $index: $index + $slice;
+    }
+    @return url('data:image/svg+xml,#{$encoded}');
+}
+
+//  Background svg mixin
+@mixin encode-background-svg($svg)
+{
+    background-image: encode-svg($svg);
+}
+
+//  Helper function to replace characters in a string
+@function str-replace($string, $search, $replace: '')
+{
+    $index: str-index($string, $search);
+    @return if($index,
+    str-slice($string, 1, $index - 1) + $replace +
+    str-replace(str-slice($string, $index +
+    str-length($search)), $search, $replace),
+    $string);
+}
+
+
+// =============================================================================
+// Function to convert pixel to REM/EM
+//
+// @param $pixels (int) - Number to be converted
+// @param $to (string) - REM or EM (default:rem)
+// @param $context (int) - Number of the context (default: 16 , example: 16px with
+// 16 of context it will be 1REM )
+// =============================================================================
+@function convertREM($pixels, $to: rem, $context: 16)
+{
+    @if (unitless($pixels))
+    {
+        $pixels: $pixels * 1px;
+    }
+
+    @if (unitless($context))
+    {
+        $context: $context * 1px;
+    }
+
+    @return if($to == 'rem', $pixels / $context * 1rem , $pixels / $context * 1em) ;
+}
+
+// =============================================================================
+// Function to calculate the aspect ratio
+// @param $width (int)
+// @param $height (int)
+// =============================================================================
+@function aspectRatio($width, $height)
+{
+    @return ($height / $width ) * 100%;
+}
+
+// =============================================================================
+// Animation with cross broswing
+// =============================================================================
+
+@mixin animation ($name, $duration, $time-function, $delay, $iteration-count, $direction, $fill-mode, $play-state)
+{
+    -webkit-animation-name: $name;
+       -moz-animation-name: $name;
+         -o-animation-name: $name;
+            animation-name: $name;
+    -webkit-animation-duration: $duration;
+       -moz-animation-duration: $duration;
+         -o-animation-duration: $duration;
+            animation-duration: $duration;
+    -webkit-animation-timing-function: $time-function;
+       -moz-animation-timing-function: $time-function;
+         -o-animation-timing-function: $time-function;
+            animation-timing-function: $time-function;
+    -webkit-animation-delay: $delay;
+       -moz-animation-delay: $delay;
+         -o-animation-delay: $delay;
+            animation-delay: $delay;
+
+    @if $iteration-count != null
+    {
+        -webkit-animation-iteration-count: $iteration-count;
+           -moz-animation-iteration-count: $iteration-count;
+             -o-animation-iteration-count: $iteration-count;
+                animation-iteration-count: $iteration-count;
+    }
+
+    @if $direction != null
+    {
+        -webkit-animation-direction: $direction;
+           -moz-animation-direction: $direction;
+             -o-animation-direction: $direction;
+                animation-direction: $direction;
+    }
+
+    @if $play-state != null
+    {
+        -webkit-animation-fill-mode: $fill-mode;
+           -moz-animation-fill-mode: $fill-mode;
+             -o-animation-fill-mode: $fill-mode;
+                animation-fill-mode: $fill-mode;
+    }
+
+    @if $play-state != null
+    {
+        -webkit-animation-play-state: $play-state;
+           -moz-animation-play-state: $play-state;
+             -o-animation-play-state: $play-state;
+                animation-play-state: $play-state;
+    }
+}
+
+@mixin keyframe ($animation_name)
+{
+    @-webkit-keyframes #{$animation-name}
+    {
+        @content;
+    }
+
+    @-moz-keyframes #{$animation-name}
+    {
+        @content;
+    }
+
+    @-o-keyframes #{$animation-name}
+    {
+        @content;
+    }
+
+    @keyframes #{$animation-name}
+    {
+        @content;
+    }
+}
+
+// =============================================================================
+// String Replace
+// =============================================================================
+
+@function str-replace($string, $search, $replace: '')
+{
+    $index: str-index($string, $search);
+
+    @if $index
+    {
+        @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+
+    @return $string;
+}
+
+// =============================================================================
+// Font Face
+// =============================================================================
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg)
+{
+    $src: null;
+    $extmods: (
+    eot: '?',
+    svg: '#' + str-replace($name, ' ', '_')
+  );
+    $formats: (
+    otf: 'opentype',
+    ttf: 'truetype'
+  );
+
+    @each $ext in $exts
+    {
+        $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+        $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+        $src: append($src, url(quote($path + '.' + $extmod)) format(quote($format)), comma);
+    }
+
+    @font-face
+    {
+        font-family: quote($name);
+        font-weight: $weight;
+        font-style: $style;
+
+        src: $src;
+    }
+}

@@ -1,0 +1,90 @@
+// Use this file to overwrite the basic Bootstrap variables and add your own variables
+// To overwrite a Bootstrap variable you don´t have to touch the Bootstrap folder.
+// Just copy a variable from /sass/bootstrap/_variables.scss, paste it here and edit the value.
+// As example you find one of the most important Bootstrap variable below: $brand-primary.
+// Thats the ugly Bootstrap blue used for all the links, primary buttons etc.
+// Just add your color code here, compile the theme.scss file to change this color everywhere
+
+/*Boostrap Grid override*/
+$grid-breakpoints: (
+  xs: 0,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1800px
+);
+
+$container-max-widths: (
+  sm: 720px,
+  md: 960px,
+  lg: 1140px,
+  xl: 1710px
+);
+
+/* Include-media override*/
+$breakpoints: (
+  'phone'            : 320px,
+  'tablet-portrait'  : 768px, //sm
+  'tablet-landscape' : 992px, //md
+  'ipad-landscape'   : 1024px,
+  'notebook'         : 1200px, //lg
+  'desktop'          : 1800px, //xl
+);
+
+/*More spacers to boostrap*/
+$spacer: 1rem !default;
+$spacers: () !default;
+$spacers: map-merge((
+ -5 : -($spacer * 3),
+ -4 : -($spacer * 1.5),
+ -3 : -$spacer,
+ -2 : -($spacer * .5),
+ -1 : -($spacer * .25),
+  0 : 0,
+  1 : ($spacer * .25),
+  2 : ($spacer * .5),
+  3 : $spacer,
+  4 : ($spacer * 1.5),
+  5 : ($spacer * 3),
+  6 : ($spacer * 3.5),
+  7 : ($spacer * 4),
+  8 : ($spacer * 4.5),
+  9 : ($spacer * 5),
+  10: ($spacer * 5.5),
+  11: ($spacer * 6),
+  15: ($spacer * 8),
+  20: ($spacer * 10.5),
+), $spacers);
+
+$zIndex: (
+  'bunker'         : -1000,
+  'underground'    : -1,
+  'ground'         : 0,
+  'overground'     : 1,
+  'secondFloor'    : 2,
+  'overlay'        : 100,
+  'navbar'         : 1000,
+  'modal'          : 1050,
+  'navbarCollapse' : 1200,
+  'space'          : 2000,
+);
+
+$colors: (
+  'black' : #000000,
+  'white' : #ffffff
+);
+
+$viewportSpacers: (
+  '25' : 25,
+  '50' : 50,
+  '75' : 70,
+  '100' : 100
+);
+
+$height: (
+  '100px' : 100px,
+);
+
+$width: (
+  '100px' : 100px,
+);

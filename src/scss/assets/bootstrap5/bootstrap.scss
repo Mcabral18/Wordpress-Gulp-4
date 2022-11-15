@@ -1,0 +1,52 @@
+/*!
+ * Bootstrap v5.0.2 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+// scss-docs-start import-stack
+// Configuration
+@import "functions";
+@import "variables";
+@import "mixins";
+@import "utilities";
+
+// Layout & components
+@import "root";
+@import "reboot";
+@import "containers";
+@import "grid";
+//NavBar Utility
+// @import "nav";
+// @import "navbar";
+// @import "close";
+// @import "buttons";
+// @import "dropdown";
+// @import "transitions";
+//NavBar Utility
+//@import "type";
+//@import "images";
+//@import "tables";
+//@import "forms";
+//@import "button-group";
+//@import "card";
+//@import "accordion";
+//@import "breadcrumb";
+//@import "pagination";
+//@import "badge";
+//@import "alert";
+//@import "progress";
+//@import "list-group";
+//@import "toasts";
+//@import "modal";
+//@import "tooltip";
+//@import "popover";
+//@import "carousel";
+//@import "spinners";
+//@import "offcanvas";
+
+// Helpers
+@import "helpers";
+// Utilities
+@import "utilities/api";
