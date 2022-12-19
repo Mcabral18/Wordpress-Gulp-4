@@ -4,13 +4,13 @@ var app = {};
 /* eslint-disable */
 'use strict';
 
-let theme = {
+let vendor = {
     init: () => {
-        //Add your custom scripts
-        console.log("Scripts_Loaded");
+        //Add your custom scripts 
+        console.log("Library Loaded");
     },
 }
 /**
  * Init theme core
  */
-theme.init();
+vendor.init();

@@ -1,107 +1,89 @@
-// Initialize modules
-// Importing specific gulp API functions lets us write them below as series() instead of gulp.series()
-const {src, dest, watch, series, parallel} = require('gulp');
-// Importing all the Gulp-related packages we want to use
-const sass = require('gulp-sass')(require('sass'));
-const concat = require('gulp-concat');
-const terser = require('gulp-terser');
-const postcss = require('gulp-postcss');
-const autoprefixer = require('autoprefixer');
-const cssnano = require('cssnano');
-const browsersync = require('browser-sync').create();
+"use strict";
 
-// File paths
-const files = {
-    scssPath: 'src/scss/**/*.scss',
-    jsPath: 'src/js/app.js',
-    jsPathBootstrap: 'src/js/bootstrap5/**/*.js',
-    jsPathVendor: 'src/js/vendor/**/*.js',
-};
+var gulp = require('gulp'),
+  sass = require('gulp-sass')(require('sass')),
+  del = require('del'),
+  uglify = require('gulp-uglify'),
+  cleanCSS = require('gulp-clean-css'),
+  rename = require("gulp-rename"),
+  autoprefixer = require('gulp-autoprefixer'),
+  browserSync = require('browser-sync').create();
 
-// Sass task: compiles the style.scss file into style.css
-function scssTask() {
-    return src(files.scssPath, {sourcemaps: true}) // set source and turn on sourcemaps
-        .pipe(sass()) // compile SCSS to CSS
-        .pipe(postcss([autoprefixer(), cssnano()])) // PostCSS plugins
-        .pipe(concat('style.min.css'))
-        .pipe(dest('dist/css', {sourcemaps: '.'})); // put final CSS in dist folder with sourcemap
-}
+// Clean task
+gulp.task('clean', function () {
+  return del(['dist', 'src/css/app.css']);
+});
 
-// JS task: concatenates and uglifies JS files to script.js
-function jsTask() {
-    return src(
-        [
-            files.jsPath,
-            //,'!' + 'includes/js/jquery.min.js', // to exclude any specific files
-        ],
-        {sourcemaps: true}
-    )
-        .pipe(concat('scripts.min.js'))
-        .pipe(terser())
-        .pipe(dest('dist/js', {sourcemaps: '.'}));
-}
+// Run convert scss to css
+gulp.task('scss', function () {
+  return gulp.src(['./src/scss/*.scss'])
+    .pipe(sass.sync({
+      outputStyle: 'expanded'
+    }).on('error', sass.logError))
+    .pipe(autoprefixer())
+    .pipe(gulp.dest('./src/css'))
+});
 
-// JS task: Compiles bootstrap5 js
-function jsBootstrap() {
-    return src(
-        [
-            files.jsPathBootstrap,
-        ],
-        {sourcemaps: true}
-    )
-        .pipe(concat('bootstrap.min.js'))
-        .pipe(terser())
-        .pipe(dest('dist/js/bootstrap5', {sourcemaps: '.'}));
-}
+// Minify CSS
+gulp.task('css:minify', gulp.series('scss', function cssMinify() {
+  return gulp.src("./src/css/*.css")
+    .pipe(cleanCSS())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('./dist/css'))
+    .pipe(browserSync.stream());
+}));
 
-//JS task: Compile Vendor 
-function jsVendor() {
-    return src(
-        [
-            files.jsPathVendor,
-        ],
-        {sourcemaps: true}
-    )
-        .pipe(concat('vendor.min.js'))
-        .pipe(terser())
-        .pipe(dest('dist/js/vendor', {sourcemaps: '.'}));
-}
+// Minify Js
+gulp.task('js:minify', function () {
+  return gulp.src([
+    './src/js/app.js'
+  ])
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('./dist/js'))
+    .pipe(browserSync.stream());
+});
 
-// Browsersync to spin up a local server
-function browserSyncServe(cb) {
-    // initializes browsersync server
-    browsersync.init({
-        server: {
-            baseDir: '.',
-        },
-        notify: {
-            styles: {
-                top: 'auto',
-                bottom: '0',
-            },
-        },
-    });
-    cb();
-}
+//Minify VendorJS
+gulp.task('jsVendor:minify', function () {
+  return gulp.src([
+    './src/js/vendor/*.js'
+  ])
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('./dist/js/vendor'))
+    .pipe(browserSync.stream());
+});
 
-// Watch task: watch SCSS and JS files for changes
-// If any change, run scss and js tasks simultaneously
-function watchTask() {
-    watch(
-        [files.scssPath, files.jsPath],
-        {interval: 1000, usePolling: true}, //Makes docker work
-        series(parallel(scssTask, jsTask, jsBootstrap, jsVendor))
-    );
-}
+// Watch file path for change
+// Exclude Bootstrap
+gulp.task('dev', function browserDev(done) {
+  gulp.watch(['src/scss/*.scss', 'src/scss/**/*.scss', '!src/scss/bootstrap/**'], gulp.series('css:minify', function cssBrowserReload(done) {
+    browserSync.reload();
+    done();
+  }));
+  gulp.watch('src/js/app.js', gulp.series('js:minify', function jsBrowserReload(done) {
+    browserSync.reload();
+    done();
+  }));
+  gulp.watch('src/js/vendor/*.js', gulp.series('jsVendor:minify', function jsBrowserReload(done) {
+    browserSync.reload();
+    done();
+  }));
+  done();
+});
 
-// Export the default Gulp task so it can be run
-// Runs the scss and js tasks simultaneously
-// then runs cacheBust, then watch task
-exports.default = series(parallel(scssTask, jsTask, jsBootstrap, jsVendor), watchTask);
+// Build task
+// gulp.task("build", gulp.series(gulp.parallel('css:minify', 'js:minify', 'jsVendor:minify'), function copyAssets() {
+//   return gulp.src([], { base: './' })
+//     .pipe(gulp.dest('dist'));
+// }));
 
-// Runs all of the above but also spins up a local Browsersync server
-// Run by typing in "gulp bs" on the command line
-exports.bs = series(
-    parallel(scssTask, jsTask, jsBootstrap, jsVendor),
-    browserSyncServe,
-);
+// Default task
+// gulp.task("default", gulp.series("clean", 'build'));

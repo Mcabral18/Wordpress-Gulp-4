@@ -1,29 +1,21 @@
-# Wordpress Front-end Boilerplate -> Sass | Gulp 4 [here](https://github.com/thecodercoder/frontend-boilerplate)
+# Bootstrap 5 boilerplate with sass and gulp 4
+A Bootstrap v5.2.3 boilerplate sass, gulp 4 tasks. 
 
-Boilerplate used for simple front-end websites that use HTML, SCSS, and JavaScript. Using Gulp 4 to compile, prefix, and minify files.
+## Pre-requisite
+- [Node.js](https://nodejs.org/en/download/ "Node Js")
+-  NPM (Comes with Node.js)
+- [Gulp 4](https://gulpjs.com/ "Gulp")
 
-## Quickstart guide
+Install Gulp cli
 
-- Clone or download this Git repo onto your computer.
-- Install Node.js => Node Version Recommended => 17.3.0
-- Run `npm install`
-- Run `gulp` to run the default Gulp task
+ $ npm install --global gulp-cli
+     
+## Getting started
 
-In this project, Gulp is configured to run the following functions:
+1. Install all dependencies and libraries:
+   `npm install`
 
-- Compile the SCSS files to CSS
-- Autoprefix and minify the CSS file
-- Concatenate the JS files
-- Uglify the JS files
-- Move final CSS files to the `/dist/css` folder
-- Move final JS files to the `/dist/js` folder
+2. Run Gulp Task:
 
-### Support Bootstrap 5
+  - `gulp dev`  - Starts a local server with browserSync and hot reloading on changes to files (HTML, SCSS, JS).
 
-If you need Bootstrap 5 - JS, inside enqueue.php remove the commented code referring to enqueue bootstrap5. That will dynamically call the script -> (bootstrap.min.js).
-
-All bootstrap css files components are added inside (src/scss/assets/bootstrap5), however they aren't being called, if you need to add any css component, inside bootstrap5 you will find a file called (bootstrap.scss), there uncomment the components you need.
-
-### Library's usage
-
-Place your library's on Vendor folder. Gulp will compile and enqueue.php dynamic call the script -> (vendor.min.js).

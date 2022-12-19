@@ -18,20 +18,10 @@ get_header();
 
     <div class="<?php echo esc_attr(get_theme_mod('understrap_container_type')); ?>" id="content">
 
-        <div class="row">
-
-            <div class="col-md-12 content-area" id="primary">
-
-                <main class="container" id="main" role="main">
-
-                    <section class="my-5">
-                        <h1>Front-end Boilerplate</h1>
-                        <h2>Using Sass and Gulp</h2>
-                    </section>
-                </main>
-
-            </div>
-
+        <div class="main text-center">
+            <h1 class="mb-4">Development Boilerplate</h1>
+            <p class="mb-2">Sass/JS and Gulp 4</p>
+            <p>Run: 'Gulp dev' - Start the compiler</p>
         </div>
 
     </div>
