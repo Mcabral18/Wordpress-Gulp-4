@@ -30,9 +30,4 @@ defined('ABSPATH') || exit; ?>
 	<div class="hfeed site" id="page" itemscope itemtype="http://schema.org/WebPage">
 
 		<header>
-			<nav class="navbar navbar-expand-lg navbar-light bg-light py-4">
-				<div class="container">
-					<h5>NavBar</h5>
-				</div>
-			</nav>
 		</header>

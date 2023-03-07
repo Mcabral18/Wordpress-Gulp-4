@@ -95,19 +95,3 @@ if (!defined('WP_ENV')) {
 //CREATE ROOT PATHS
 define('THEMEROOT', get_stylesheet_directory_uri());
 define('IMG', THEMEROOT . '/img');
-
-
-//remove autocomplete
-/*
-add_filter( 'wpcf7_form_elements', 'imp_wpcf7_form_elements' );
-function imp_wpcf7_form_elements( $content ) {
-  $str_pos = strpos( $content, 'name="nome"' );
-  if ($str_pos) {
-      $content = substr_replace( $content, ' autocomplete="both" autocomplete="off" ', $str_pos, 0 );
-  }
-  $str_pos = strpos( $content, 'name="email"' );
-  if ($str_pos) {
-      $content = substr_replace( $content, ' autocomplete="both" autocomplete="off" ', $str_pos, 0 );
-  }
-  return $content;
-}*/

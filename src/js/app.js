@@ -6,9 +6,14 @@ var app = {};
 
 let theme = {
     init: () => {
+        console.log("Scripts Ejected")
         //Add your custom scripts
-        console.log("Scripts_Loaded");
+        theme.appScripts();
     },
+    // Some specific function
+    appScripts: function () {
+        console.log("Some specific function");
+    }
 }
 /**
  * Init theme core

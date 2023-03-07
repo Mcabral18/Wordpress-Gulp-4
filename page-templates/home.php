@@ -17,13 +17,11 @@ get_header();
 <div class="wrapper" id="full-width-page-wrapper">
 
     <div class="<?php echo esc_attr(get_theme_mod('understrap_container_type')); ?>" id="content">
-
         <div class="main text-center">
-            <h1 class="mb-4">Development Boilerplate</h1>
-            <p class="mb-2">Sass/JS and Gulp 4</p>
-            <p>Run: 'Gulp dev' - Start the compiler</p>
+            <div>
+                <img src="https://legendary.pt/app/uploads/2018/08/brand-horizontal-300x34.png" alt="Legendary Theme">
+            </div>
         </div>
-
     </div>
 
 </div>

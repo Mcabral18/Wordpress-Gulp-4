@@ -29,7 +29,7 @@ function create_taxonomies()
         'rewrite'           => array('slug' => 'genre'),
     );
 
-    register_taxonomy('genre', 'stores', $args);
+    // register_taxonomy('genre', 'stores', $args);
 }
 
 add_action('init', 'create_taxonomies', 0);

@@ -11,10 +11,7 @@
 // Exit if accessed directly.
 defined('ABSPATH') || exit; ?>
 
-<footer class="bg-light py-4">
-	<div class="container">
-		<h6>Footer</h6>
-	</div>
+<footer>
 </footer>
 
 </div>

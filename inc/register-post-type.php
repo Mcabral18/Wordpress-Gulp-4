@@ -45,7 +45,7 @@ function post_type()
         //'menu_icon'           => 'dashicons-awards',
     );
 
-    register_post_type('highligth', $args);
+    // register_post_type('highligth', $args);
 }
 
 
